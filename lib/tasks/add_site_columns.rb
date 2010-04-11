@@ -11,8 +11,10 @@ class AddSiteColumns < ActiveRecord::Migration
   
   def self.up
     MODELS.each do |model|
+      puts "Applying scope to #{model}"
       begin
         add_column model.tableize, :site_id, :integer
+        # Update all records to have a site_id of 1 (so nothing errors out)
         model.constantize.update_all "site_id = 1"
         # Special case for Snippets to add a proper index
         if model == 'Snippet'
